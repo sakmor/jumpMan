@@ -40,10 +40,21 @@ public class main : MonoBehaviour
         }
         if (Input.GetKey("a"))
         {
+            if (player.GetComponent<player>().IsGrounded)
+            {
+                player.GetComponent<Animator>().SetInteger("state", 1);
+                player.GetComponent<SpriteRenderer>().flipX = true;
+            }
+
             player.GetComponent<Rigidbody>().position += Vector3.left * 0.15f;
         }
         if (Input.GetKey("d"))
         {
+            if (player.GetComponent<player>().IsGrounded)
+            {
+                player.GetComponent<Animator>().SetInteger("state", 1);
+                player.GetComponent<SpriteRenderer>().flipX = false;
+            }
             player.GetComponent<Rigidbody>().position += Vector3.right * 0.15f;
         }
 

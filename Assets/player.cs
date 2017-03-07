@@ -19,7 +19,26 @@ public class player : MonoBehaviour
     void Update()
     {
         jumpThroughHead();
+        animatorState();
 
+    }
+    void animatorState()
+    {
+        if (!IsGrounded)
+        {
+            if (GetComponent<Rigidbody>().velocity.y > 0)
+            {
+                GetComponent<Animator>().SetInteger("state", 2);
+            }
+            else
+            {
+                GetComponent<Animator>().SetInteger("state", 3);
+            }
+        }
+        if (IsGrounded)
+        {
+            GetComponent<Animator>().SetInteger("state", 0);
+        }
     }
     void jumpThroughHead()
     {
