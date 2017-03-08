@@ -33,20 +33,18 @@ public class main : MonoBehaviour
 
     void playerControl()
     {
-        if (Input.GetKeyDown("space")
-            && player.GetComponent<player>().IsGrounded)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            player.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            player.GetComponent<player>().pressA();
         }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            player.GetComponent<player>().releaseA();
+        }
+
         if (Input.GetKey("a"))
         {
-            if (player.GetComponent<player>().IsGrounded)
-            {
-                player.GetComponent<Animator>().SetInteger("state", 1);
-                player.GetComponent<SpriteRenderer>().flipX = true;
-            }
-
-            player.GetComponent<Rigidbody>().position += Vector3.left * 0.15f;
+            player.GetComponent<player>().left();
         }
         if (Input.GetKeyUp("a"))
         {
@@ -60,19 +58,15 @@ public class main : MonoBehaviour
         }
         if (Input.GetKey("d"))
         {
-            if (player.GetComponent<player>().IsGrounded)
-            {
-                player.GetComponent<Animator>().SetInteger("state", 1);
-                player.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            player.GetComponent<Rigidbody>().position += Vector3.right * 0.15f;
+            player.GetComponent<player>().right();
         }
-
-        if (Input.GetKeyUp("space")
-            && !player.GetComponent<player>().IsGrounded
-            && player.GetComponent<Rigidbody>().velocity.y > 0)
+        if (Input.GetKeyDown("space"))
         {
-            player.GetComponent<Rigidbody>().velocity *= 0.5f;
+            player.GetComponent<player>().jump();
+        }
+        if (Input.GetKeyUp("space"))
+        {
+            player.GetComponent<player>().fall();
         }
 
     }
