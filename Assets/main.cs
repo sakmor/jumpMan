@@ -46,19 +46,13 @@ public class main : MonoBehaviour
         {
             player.GetComponent<player>().left();
         }
-        if (Input.GetKeyUp("a"))
-        {
-            if (player.GetComponent<player>().IsGrounded)
-            {
-                player.GetComponent<Animator>().SetInteger("state", 4);
-                player.GetComponent<SpriteRenderer>().flipX = true;
-            }
-
-            player.GetComponent<Rigidbody>().position += Vector3.left * 0.15f;
-        }
         if (Input.GetKey("d"))
         {
             player.GetComponent<player>().right();
+        }
+        if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
+        {
+            player.GetComponent<player>().brakes();
         }
         if (Input.GetKeyDown("space"))
         {

@@ -26,21 +26,57 @@ public class player : MonoBehaviour
     public void jump()
     {
         if (IsGrounded)
-            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 160);
     }
 
     public void fall()
     {
-        this.GetComponent<Rigidbody>().velocity *= 0.5f;
+        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x * 0.5f, temp3.y * 0.5f, temp3.z);
+
+    }
+    public void left()
+    {
+
+
+        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z);
+
+        if (this.GetComponent<player>().IsGrounded)
+        {
+            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 5);
+            this.GetComponent<Animator>().SetInteger("state", 1);
+            this.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else
+        {
+            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 3F);
+        }
+        if (this.GetComponent<Rigidbody>().velocity.x > 0)
+        {
+            this.GetComponent<Animator>().SetInteger("state", 4);
+        }
 
     }
     public void right()
     {
-        this.GetComponent<Rigidbody>().position += Vector3.right * 0.15f * speedUP;
+
+        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z);
+
         if (IsGrounded)
         {
+            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 5);
             this.GetComponent<Animator>().SetInteger("state", 1);
             this.GetComponent<SpriteRenderer>().flipX = false;
+        }
+        else
+        {
+            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 3f);
+        }
+        if (this.GetComponent<Rigidbody>().velocity.x < 0)
+        {
+            this.GetComponent<Animator>().SetInteger("state", 4);
         }
     }
     public void pressA()
@@ -59,16 +95,12 @@ public class player : MonoBehaviour
         }
 
     }
-    public void left()
+    public void brakes()
     {
-        this.GetComponent<Rigidbody>().position += Vector3.left * 0.15f * speedUP;
-        if (this.GetComponent<player>().IsGrounded)
-        {
-            this.GetComponent<Animator>().SetInteger("state", 1);
-            this.GetComponent<SpriteRenderer>().flipX = true;
-        }
-
+        // Debug.Log("brakes");
+        // this.GetComponent<Rigidbody>().velocity *= 0.5f;
     }
+
     //animatorState: 依據player的各種狀態，判斷現在對應的動畫狀態
     void animatorState()
     {
@@ -88,8 +120,18 @@ public class player : MonoBehaviour
 
         if (IsGrounded)
         {
-            //如果在地面:0-idel
-            GetComponent<Animator>().SetInteger("state", 0);
+            if (GetComponent<Rigidbody>().velocity.x > -0.5f && GetComponent<Rigidbody>().velocity.x < 0.5f)
+            {
+                //如果在地面:0-idel
+                GetComponent<Animator>().SetInteger("state", 0);
+            }
+            else
+            {
+                GetComponent<Animator>().SetInteger("state", 1);
+                GetComponent<Animator>().speed = 0.5f + Mathf.Abs(GetComponent<Rigidbody>().velocity.x) / 5;
+            }
+
+
         }
     }
 
