@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 99e61bbb0e0bf9d439ff9e6e88f7b5b5
-timeCreated: 1488858243
+timeCreated: 1488971539
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -59,6 +59,7 @@ TextureImporter:
     21300104: Mario_52
     21300106: Mario_53
     21300108: Mario_54
+    21300110: Mario_55
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -114,6 +115,14 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: WebGL
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -834,6 +843,19 @@ TextureImporter:
         y: 61
         width: 18
         height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Mario_55
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 180
+        width: 16
+        height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

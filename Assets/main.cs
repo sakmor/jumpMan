@@ -48,6 +48,16 @@ public class main : MonoBehaviour
 
             player.GetComponent<Rigidbody>().position += Vector3.left * 0.15f;
         }
+        if (Input.GetKeyUp("a"))
+        {
+            if (player.GetComponent<player>().IsGrounded)
+            {
+                player.GetComponent<Animator>().SetInteger("state", 4);
+                player.GetComponent<SpriteRenderer>().flipX = true;
+            }
+
+            player.GetComponent<Rigidbody>().position += Vector3.left * 0.15f;
+        }
         if (Input.GetKey("d"))
         {
             if (player.GetComponent<player>().IsGrounded)
