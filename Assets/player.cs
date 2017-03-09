@@ -22,6 +22,12 @@ public class player : MonoBehaviour
     {
         jumpThroughHead();
         animatorState();
+        velocityText();
+    }
+    void velocityText()
+    {
+        GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>().text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
+
     }
     public void jump()
     {
@@ -32,7 +38,7 @@ public class player : MonoBehaviour
     public void fall()
     {
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x * 0.5f, temp3.y * 0.5f, temp3.z);
+        this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
     public void left()

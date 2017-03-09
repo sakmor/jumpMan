@@ -41,19 +41,16 @@ public class main : MonoBehaviour
         {
             player.GetComponent<player>().releaseA();
         }
-
-        if (Input.GetKey("a"))
-        {
-            player.GetComponent<player>().left();
-        }
         if (Input.GetKey("d"))
         {
             player.GetComponent<player>().right();
         }
-        if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
+        if (Input.GetKey("a"))
         {
-            player.GetComponent<player>().brakes();
+            player.GetComponent<player>().left();
         }
+
+
         if (Input.GetKeyDown("space"))
         {
             player.GetComponent<player>().jump();
