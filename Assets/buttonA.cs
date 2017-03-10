@@ -21,7 +21,7 @@ public class buttonA : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            touch = true;
+
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 hitUIObject = EventSystem.current.currentSelectedGameObject;
@@ -29,6 +29,7 @@ public class buttonA : MonoBehaviour
                 {
                     if (hitUIObject.name == this.name && !pressA)
                     {
+                        touch = true;
                         GameObject.Find("player").GetComponent<player>().jump();
                         pressA = true;
                     }

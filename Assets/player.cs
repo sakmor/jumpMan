@@ -47,7 +47,7 @@ public class player : MonoBehaviour
     {
         n = Mathf.Abs(n);
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z) * n;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
 
         if (this.GetComponent<player>().IsGrounded)
         {
@@ -69,7 +69,7 @@ public class player : MonoBehaviour
     {
         n = Mathf.Abs(n);
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z) * n;
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
 
         if (IsGrounded)
         {
