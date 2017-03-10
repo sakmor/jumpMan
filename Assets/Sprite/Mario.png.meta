@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 99e61bbb0e0bf9d439ff9e6e88f7b5b5
-timeCreated: 1488971539
+timeCreated: 1489069115
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -60,6 +60,10 @@ TextureImporter:
     21300106: Mario_53
     21300108: Mario_54
     21300110: Mario_55
+    21300112: Mario_56
+    21300114: Mario_57
+    21300116: Mario_58
+    21300118: Mario_59
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -856,6 +860,58 @@ TextureImporter:
         y: 180
         width: 16
         height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Mario_56
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 23
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Mario_57
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 45
+        width: 17
+        height: 9
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Mario_58
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 45
+        width: 16
+        height: 17
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Mario_59
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 45
+        width: 16
+        height: 17
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
