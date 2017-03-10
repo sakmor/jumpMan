@@ -23,7 +23,9 @@ public class player : MonoBehaviour
         jumpThroughHead();
         animatorState();
         velocityText();
+
     }
+
     void velocityText()
     {
         GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>().text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
@@ -41,12 +43,11 @@ public class player : MonoBehaviour
         this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
-    public void left()
+    public void left(float n)
     {
-
-
+        n = Mathf.Abs(n);
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z);
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z) * n;
 
         if (this.GetComponent<player>().IsGrounded)
         {
@@ -64,11 +65,11 @@ public class player : MonoBehaviour
         }
 
     }
-    public void right()
+    public void right(float n)
     {
-
+        n = Mathf.Abs(n);
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z);
+        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4), temp3.y, temp3.z) * n;
 
         if (IsGrounded)
         {

@@ -6,13 +6,14 @@ public class main : MonoBehaviour
 {
 
     GameObject player;
+    GameObject joyStick;
     GameObject Camera;
     Vector3 cameraRELtarget;
 
     // Use this for initialization
     void Start()
     {
-
+        joyStick = GameObject.Find("joyStick");
         player = GameObject.Find("player");
         Camera = GameObject.Find("Main Camera");
         cameraRELtarget = Camera.transform.position - player.transform.position;
@@ -24,7 +25,22 @@ public class main : MonoBehaviour
     {
         cameraFellow();
         playerControl();
-
+        joyStickControl();
+    }
+    void joyStickControl()
+    {
+        if (joyStick.GetComponent<joyStick>().touch)
+        {
+            Vector2 joyStickVec = joyStick.GetComponent<joyStick>().joyStickVec;
+            if (joyStickVec.x < 0)
+            {
+                player.GetComponent<player>().left(joyStickVec.x);
+            }
+            else
+            {
+                player.GetComponent<player>().right(joyStickVec.x);
+            }
+        }
     }
     void cameraFellow()
     {
@@ -43,11 +59,11 @@ public class main : MonoBehaviour
         }
         if (Input.GetKey("d"))
         {
-            player.GetComponent<player>().right();
+            player.GetComponent<player>().right(1);
         }
         if (Input.GetKey("a"))
         {
-            player.GetComponent<player>().left();
+            player.GetComponent<player>().left(1);
         }
 
 
