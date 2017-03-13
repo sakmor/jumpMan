@@ -40,7 +40,6 @@ public class buttonA : MonoBehaviour
         {
             if (touch)
             {
-                Debug.Log("fall");
                 GameObject.Find("player").GetComponent<player>().fall();
                 touch = false;
             }

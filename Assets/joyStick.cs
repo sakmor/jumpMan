@@ -24,19 +24,14 @@ public class joyStick : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-
                 hitUIObject = EventSystem.current.currentSelectedGameObject;
                 if (hitUIObject)
                 {
                     hitUIObjectName = hitUIObject.name;
                 }
-            }
-            else if (EventSystem.current.IsPointerOverGameObject(0))
-            {
-                hitUIObject = EventSystem.current.currentSelectedGameObject;
-                if (hitUIObject)
+                else
                 {
-                    hitUIObjectName = hitUIObject.name;
+                    hitUIObjectName = "";
                 }
             }
 

@@ -57,14 +57,15 @@ public class main : MonoBehaviour
         {
             player.GetComponent<player>().releaseA();
         }
-        if (Input.GetKey("d"))
-        {
-            player.GetComponent<player>().right(1);
-        }
         if (Input.GetKey("a"))
         {
             player.GetComponent<player>().left(1);
         }
+        if (Input.GetKey("d"))
+        {
+            player.GetComponent<player>().right(1);
+        }
+
 
 
         if (Input.GetKeyDown("space"))

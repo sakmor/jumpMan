@@ -75,11 +75,13 @@ public class m101 : MonoBehaviour
         {
             if (playerTransform.position.y > this.transform.position.y)
             {
-                var temp = Mathf.Abs(collision.gameObject.GetComponent<Rigidbody>().velocity.y) * 50f;
-                Debug.Log(temp);
-                playerTransform.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 + new Vector3(0, temp, 0));
-                GetComponent<Animator>().SetInteger("state", 9);
-
+                var temp = collision.gameObject.GetComponent<Rigidbody>().velocity.y;
+                if (temp <= 1)
+                {
+                    temp = 0;
+                    playerTransform.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 + new Vector3(0, temp, 0));
+                    GetComponent<Animator>().SetInteger("state", 9);
+                }
             }
         }
     }

@@ -40,7 +40,8 @@ public class player : MonoBehaviour
     public void fall()
     {
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
+        if (temp3.y > 0)
+            this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
     public void left(float n)
