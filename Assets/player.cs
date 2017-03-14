@@ -44,6 +44,10 @@ public class player : MonoBehaviour
             this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
+    public void take()
+    {
+        this.GetComponent<Animator>().SetInteger("state", 5);
+    }
     public void left(float n)
     {
         n = Mathf.Abs(n);
@@ -128,14 +132,16 @@ public class player : MonoBehaviour
 
         if (IsGrounded)
         {
-            if (GetComponent<Rigidbody>().velocity.x > -0.5f && GetComponent<Rigidbody>().velocity.x < 0.5f)
+            if (GetComponent<Rigidbody>().velocity.x > -0.5f
+            && GetComponent<Rigidbody>().velocity.x < 0.5f
+            && GetComponent<Animator>().GetInteger("state") != 5)
             {
                 //如果在地面:0-idel
                 GetComponent<Animator>().SetInteger("state", 0);
             }
             else
             {
-                GetComponent<Animator>().SetInteger("state", 1);
+                // GetComponent<Animator>().SetInteger("state", 1);
                 GetComponent<Animator>().speed = 0.5f + Mathf.Abs(GetComponent<Rigidbody>().velocity.x) / 5;
             }
 

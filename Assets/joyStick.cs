@@ -37,6 +37,7 @@ public class joyStick : MonoBehaviour
 
             if (hitUIObjectName == "joyStick")
             {
+
                 touch = true;
                 Sprite _sprite = hitUIObject.GetComponent<UnityEngine.UI.Image>().sprite;
                 Rect _rect = hitUIObject.GetComponentInParent<RectTransform>().rect;
