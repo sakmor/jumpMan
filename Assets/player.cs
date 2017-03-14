@@ -46,7 +46,7 @@ public class player : MonoBehaviour
     }
     public void take()
     {
-        this.GetComponent<Animator>().SetInteger("state", 5);
+        this.GetComponent<Animator>().Play("take", -1, 0f);
     }
     public void left(float n)
     {
