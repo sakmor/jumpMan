@@ -8,10 +8,16 @@ public class player : MonoBehaviour
     public bool IsGrounded;
     public int score;
     public float speedUP;
+    public bool isTake;
     GameObject[] allBlock;
+    GameObject targetObj;
+    GameObject nTargetObj;
+    Transform lastTargetObj;
+    Vector3 lastTargetObjScale;
     // Use this for initialization
     void Start()
     {
+        isTake = false;
         speedUP = 1;
         allBlock = GameObject.FindGameObjectsWithTag("block");
         IsGrounded = true;
@@ -46,7 +52,45 @@ public class player : MonoBehaviour
     }
     public void take()
     {
-        this.GetComponent<Animator>().Play("take", -1, 0f);
+        if (isTake)
+        {
+            //throw
+            this.GetComponent<Animator>().Play("idel", -1, 0f);
+            isTake = false;
+            nTargetObj.transform.parent = lastTargetObj;
+            nTargetObj.transform.localScale = lastTargetObjScale;
+            nTargetObj.AddComponent<Rigidbody>();
+            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
+            nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
+            nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
+
+
+        }
+        else if (GetComponent<Animator>().GetInteger("state") == 0)
+        {
+            //take
+            if (targetObj)
+            {
+
+                // Reset 
+                targetObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                targetObj.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                targetObj.GetComponent<Rigidbody>().isKinematic = true;
+                targetObj.transform.rotation = Quaternion.identity;
+                targetObj.GetComponent<Rigidbody>().isKinematic = false;
+
+
+                // Copy
+                nTargetObj = Instantiate(targetObj);
+                Destroy(nTargetObj.GetComponent<Rigidbody>());
+                nTargetObj.transform.parent = transform;
+                nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
+                Destroy(targetObj);
+
+                this.GetComponent<Animator>().Play("take", -1, 0f);
+                isTake = true;
+            }
+        }
     }
     public void left(float n)
     {
@@ -203,11 +247,27 @@ public class player : MonoBehaviour
         {
             IsGrounded = true;
         }
+
+        //碰到blockTake時
+        if (collision.gameObject.tag == "blockTake")
+        {
+            if (isTake == false)
+            {
+                targetObj = collision.gameObject;
+                lastTargetObj = targetObj.transform.parent;
+                lastTargetObjScale = targetObj.transform.localScale;
+            }
+            IsGrounded = true;
+        }
     }
 
     //OnCollisionEnter:當player離開碰到的collision時(一次性)...
     void OnCollisionExit(Collision collision)
     {
+        if (collision.gameObject == targetObj)
+        {
+            targetObj = null;
+        }
         //當離開block時
         if (collision.gameObject.tag == "block")
         {
