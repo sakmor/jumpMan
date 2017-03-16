@@ -63,6 +63,14 @@ public class player : MonoBehaviour
             nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
             nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
             nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
+            if (this.GetComponent<SpriteRenderer>().flipX)
+            {
+                nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
+            }
+            else
+            {
+                nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
+            }
 
 
         }
