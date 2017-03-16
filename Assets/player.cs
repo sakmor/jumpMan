@@ -10,6 +10,7 @@ public class player : MonoBehaviour
     public float speedUP;
     public bool isTake;
     GameObject[] allBlock;
+    GameObject[] allTakeable;
     GameObject targetObj;
     GameObject nTargetObj;
     Transform lastTargetObj;
@@ -20,6 +21,7 @@ public class player : MonoBehaviour
         isTake = false;
         speedUP = 1;
         allBlock = GameObject.FindGameObjectsWithTag("block");
+        allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
         IsGrounded = true;
     }
 
@@ -29,9 +31,35 @@ public class player : MonoBehaviour
         jumpThroughHead();
         animatorState();
         velocityText();
+        targetSerach();
 
     }
 
+    void targetSerach()
+    {
+        if (isTake == false)
+        {
+
+            float dist = Mathf.Infinity;
+            foreach (var t in allTakeable)
+            {
+                if (t.GetComponent<Renderer>().isVisible)
+                {
+                    float temp = Vector3.Distance(t.transform.position, transform.position);
+                    if (temp < dist)
+                    {
+                        dist = temp;
+                        targetObj = t;
+                    }
+                }
+            }
+            lastTargetObj = targetObj.transform.parent;
+            lastTargetObjScale = targetObj.transform.localScale;
+
+
+        }
+
+    }
     void velocityText()
     {
         GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>().text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
@@ -58,9 +86,10 @@ public class player : MonoBehaviour
             this.GetComponent<Animator>().Play("idel", -1, 0f);
             isTake = false;
             nTargetObj.transform.parent = lastTargetObj;
+            nTargetObj.transform.tag = "blockTake";
             nTargetObj.transform.localScale = lastTargetObjScale;
             nTargetObj.AddComponent<Rigidbody>();
-            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
+            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
             nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
             nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
             if (this.GetComponent<SpriteRenderer>().flipX)
@@ -72,12 +101,15 @@ public class player : MonoBehaviour
                 nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
             }
 
+            //更新清單
+            allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
 
         }
         else if (GetComponent<Animator>().GetInteger("state") == 0)
         {
             //take
-            if (targetObj)
+            if (targetObj
+            && Vector3.Distance(transform.position, targetObj.transform.position) < 1)
             {
 
                 // Reset 
@@ -87,9 +119,17 @@ public class player : MonoBehaviour
                 targetObj.transform.rotation = Quaternion.identity;
                 targetObj.GetComponent<Rigidbody>().isKinematic = false;
 
+                //disable m101
+                if (targetObj.GetComponent<m101>())
+                {
+                    targetObj.GetComponent<m101>().enabled = false;
+                    targetObj.GetComponent<Animator>().enabled = false;
+                }
+
 
                 // Copy
                 nTargetObj = Instantiate(targetObj);
+                nTargetObj.transform.tag = "Untagged";
                 Destroy(nTargetObj.GetComponent<Rigidbody>());
                 nTargetObj.transform.parent = transform;
                 nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
@@ -259,12 +299,6 @@ public class player : MonoBehaviour
         //碰到blockTake時
         if (collision.gameObject.tag == "blockTake")
         {
-            if (isTake == false)
-            {
-                targetObj = collision.gameObject;
-                lastTargetObj = targetObj.transform.parent;
-                lastTargetObjScale = targetObj.transform.localScale;
-            }
             IsGrounded = true;
         }
     }
