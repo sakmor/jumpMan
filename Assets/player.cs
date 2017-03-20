@@ -20,9 +20,9 @@ public class player : MonoBehaviour
     {
         isTake = false;
         speedUP = 1;
-        allBlock = GameObject.FindGameObjectsWithTag("block");
+        allBlock = GameObject.FindGameObjectsWithTag("block"); ;
         allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
-        IsGrounded = true;
+        IsGrounded = false;
     }
 
     // Update is called once per frame
@@ -53,9 +53,12 @@ public class player : MonoBehaviour
                     }
                 }
             }
-            lastTargetObj = targetObj.transform.parent;
-            lastTargetObjScale = targetObj.transform.localScale;
+            if (targetObj)
+            {
+                lastTargetObj = targetObj.transform.parent;
+                lastTargetObjScale = targetObj.transform.localScale;
 
+            }
 
         }
 
@@ -92,6 +95,14 @@ public class player : MonoBehaviour
             nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
             nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
             nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
+
+            if (nTargetObj.GetComponent<m101>())
+            {
+                nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                nTargetObj.GetComponent<m101>().enabled = true;
+                nTargetObj.GetComponent<Animator>().enabled = true;
+            }
+
             if (this.GetComponent<SpriteRenderer>().flipX)
             {
                 nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
@@ -109,7 +120,7 @@ public class player : MonoBehaviour
         {
             //take
             if (targetObj
-            && Vector3.Distance(transform.position, targetObj.transform.position) < 1)
+            && Vector3.Distance(transform.position, targetObj.transform.position) < 1.5f)
             {
 
                 // Reset 

@@ -16,7 +16,7 @@ public class m101 : MonoBehaviour
         speed = 2.0f;
         playerTransform = GameObject.Find("player").transform;
         goPos = this.transform.position;
-        IsGrounded = true;
+        IsGrounded = false;
     }
 
     // Update is called once per frame
@@ -54,14 +54,16 @@ public class m101 : MonoBehaviour
 
     void movement()
     {
-        Vector3 dir = Vector3.zero;
-        var dist = Vector3.Distance(this.transform.position, goPos);
-        if (dist < 4)
+        if (IsGrounded)
         {
-            dir = (goPos - transform.position).normalized * speed;
+            Vector3 dir = Vector3.zero;
+            var dist = Vector3.Distance(this.transform.position, goPos);
+            if (dist < 4)
+            {
+                dir = (goPos - transform.position).normalized * speed;
+            }
+            GetComponent<Rigidbody>().velocity = new Vector3(dir.x, 0, 0);
         }
-        GetComponent<Rigidbody>().velocity = new Vector3(dir.x, 0, 0);
-
     }
 
     void OnCollisionEnter(Collision collision)
