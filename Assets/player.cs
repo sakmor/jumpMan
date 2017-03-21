@@ -143,7 +143,15 @@ public class player : MonoBehaviour
                 nTargetObj.transform.tag = "Untagged";
                 Destroy(nTargetObj.GetComponent<Rigidbody>());
                 nTargetObj.transform.parent = transform;
-                nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
+                if (targetObj.name == "Sphere")
+                {
+                    nTargetObj.name = "Sphere";
+                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.35f;
+                }
+                else
+                {
+                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
+                }
                 Destroy(targetObj);
 
                 this.GetComponent<Animator>().Play("take", -1, 0f);
