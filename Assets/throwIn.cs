@@ -26,13 +26,23 @@ public class throwIn : MonoBehaviour
         if (other.gameObject.GetComponent<Rigidbody>().velocity.y < 0)
         {
             main.throwIn();
+            if (other.GetComponent<ball>().isNiceshoot)
+            {
+                main.throwIn();
+                main.throwIn();
+                main.throwIn();
+                main.throwIn();
+            }
+
+            float dist = Vector3.Distance(other.GetComponent<ball>().starPos, this.transform.position);
+            Debug.Log(dist);
+            if (dist > 5)
+            {
+                main.throwIn();
+                main.throwIn();
+                Debug.Log("there isNiceshoot");
+            }
         }
     }
 
-    void OnCollisionEnter(Collision other)
-    {
-        Debug.Log("ballIn");
-
-
-    }
 }

@@ -111,12 +111,14 @@ public class player : MonoBehaviour
             {
                 nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
             }
+            //加入空心球機制
+            nTargetObj.AddComponent<ball>();
 
             //更新清單
             allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
 
         }
-        else if (GetComponent<Animator>().GetInteger("state") == 0)
+        else
         {
             //take
             if (targetObj
@@ -154,7 +156,7 @@ public class player : MonoBehaviour
                 }
                 Destroy(targetObj);
 
-                this.GetComponent<Animator>().Play("take", -1, 0f);
+                // this.GetComponent<Animator>().Play("take", -1, 0f);
                 isTake = true;
             }
         }
