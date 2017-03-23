@@ -24,8 +24,8 @@ public class m101 : MonoBehaviour
     {
         if (GetComponent<Renderer>().isVisible)
         {
-            ai();
-            movement();
+            // ai();
+            // movement();
         }
 
     }
@@ -73,15 +73,15 @@ public class m101 : MonoBehaviour
         {
             IsGrounded = true;
         }
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "blockTake")
         {
-            if (playerTransform.position.y > this.transform.position.y)
+            if (collision.transform.position.y > this.transform.position.y)
             {
                 var temp = collision.gameObject.GetComponent<Rigidbody>().velocity.y;
                 if (temp <= 1)
                 {
                     temp = 0;
-                    playerTransform.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 + new Vector3(0, temp, 0));
+                    collision.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 250 + new Vector3(0, temp, 0));
                     GetComponent<Animator>().SetInteger("state", 9);
                 }
             }
@@ -96,9 +96,9 @@ public class m101 : MonoBehaviour
         {
             IsGrounded = true;
         }
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "blockTake")
         {
-            if (playerTransform.position.y > this.transform.position.y)
+            if (collision.transform.position.y > this.transform.position.y)
             {
                 GetComponent<Animator>().SetInteger("state", 9);
             }
@@ -117,9 +117,9 @@ public class m101 : MonoBehaviour
         {
             IsGrounded = false;
         }
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "blockTake")
         {
-            if (playerTransform.position.y > this.transform.position.y)
+            if (collision.transform.position.y > this.transform.position.y)
             {
                 GetComponent<Animator>().SetInteger("state", 1);
             }

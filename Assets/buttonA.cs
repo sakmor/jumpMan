@@ -10,8 +10,10 @@ public class buttonA : MonoBehaviour
 
     // Use this for initialization
     GameObject hitUIObject;
+    player player;
     void Start()
     {
+        player = GameObject.Find("player").GetComponent<player>();
         pressA = false;
         touch = false;
     }
@@ -30,7 +32,7 @@ public class buttonA : MonoBehaviour
                     if (hitUIObject.name == this.name && !pressA)
                     {
                         touch = true;
-                        GameObject.Find("player").GetComponent<player>().jump();
+                        player.jump();
                         pressA = true;
                     }
                 }
@@ -40,7 +42,7 @@ public class buttonA : MonoBehaviour
         {
             if (touch)
             {
-                GameObject.Find("player").GetComponent<player>().fall();
+                player.fall();
                 touch = false;
             }
             else

@@ -7,26 +7,42 @@ public class main : MonoBehaviour
     int score;
     int best;
     float gameTime;
+    float basefov;
     float gameStartTime;
     GameObject countDownTime;
     GameObject player;
     GameObject joyStick;
+    GameObject Basket;
     GameObject Camera;
+    float cameraBaseDist;
     Vector3 cameraRELtarget;
+    UnityEngine.UI.Text bestRecord, ScoreText;
+    public bool isDymCamer;
+
 
     // Use this for initialization
     void Start()
     {
+        isDymCamer = true;
         score = 0;
         best = 0;
         gameStartTime = Time.time;
         gameTime = 30;
+        bestRecord = GameObject.Find("bestRecord").GetComponent<UnityEngine.UI.Text>();
         countDownTime = GameObject.Find("countDownTime");
         joyStick = GameObject.Find("joyStick");
         player = GameObject.Find("player");
         Camera = GameObject.Find("Main Camera");
+        Basket = GameObject.Find("Basket");
+        ScoreText = GameObject.Find("Score").GetComponent<UnityEngine.UI.Text>();
         cameraRELtarget = Camera.transform.position - player.transform.position;
+        cameraBaseDist = Vector3.Distance(player.transform.position, Basket.transform.position);
+        basefov = Camera.GetComponent<Camera>().fieldOfView;
 
+    }
+    public void dymCamer()
+    {
+        isDymCamer = !isDymCamer;
     }
     public void throwIn()
     {
@@ -34,18 +50,23 @@ public class main : MonoBehaviour
         if (score > best)
         {
             best = score;
-            GameObject.Find("text").GetComponent<UnityEngine.UI.Text>().text = "Best record: " + (best).ToString("F1");
+            bestRecord.text = "Best record: " + (best).ToString("F1");
         }
-        GameObject.Find("Score").GetComponent<UnityEngine.UI.Text>().text = score.ToString();
+        ScoreText.text = score.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
         countDown();
-        cameraFellow();
+
         playerControl();
         joyStickControl();
+    }
+
+    void LateUpdate()
+    {
+        cameraFellow();
     }
     void countDown()
     {
@@ -54,7 +75,7 @@ public class main : MonoBehaviour
         if (gameOverTime <= 0)
         {
             score = 0;
-            GameObject.Find("Score").GetComponent<UnityEngine.UI.Text>().text = score.ToString();
+            ScoreText.text = score.ToString();
             gameStartTime = Time.time;
         }
 
@@ -77,6 +98,19 @@ public class main : MonoBehaviour
     void cameraFellow()
     {
         Camera.transform.position = cameraRELtarget + player.transform.position;
+        if (isDymCamer)
+        {
+            float dist = Vector3.Distance(player.transform.position, Basket.transform.position) - cameraBaseDist;
+            if (dist > 0)
+            {
+                Camera.GetComponent<Camera>().fieldOfView = basefov + dist * 4;
+            }
+            else
+            {
+                Camera.GetComponent<Camera>().fieldOfView = basefov;
+            }
+        }
+
     }
 
     void playerControl()

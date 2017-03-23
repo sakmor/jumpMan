@@ -28,10 +28,10 @@ public class throwIn : MonoBehaviour
             main.throwIn();
             if (other.GetComponent<ball>().isNiceshoot)
             {
-                main.throwIn();
-                main.throwIn();
-                main.throwIn();
-                main.throwIn();
+                // main.throwIn();
+                // main.throwIn();
+                // main.throwIn();
+                // main.throwIn();
             }
 
             float dist = Vector3.Distance(other.GetComponent<ball>().starPos, this.transform.position);

@@ -15,6 +15,8 @@ public class player : MonoBehaviour
     GameObject nTargetObj;
     Transform lastTargetObj;
     Vector3 lastTargetObjScale;
+
+    UnityEngine.UI.Text velocityText, ScoreText;
     // Use this for initialization
     void Start()
     {
@@ -23,6 +25,8 @@ public class player : MonoBehaviour
         allBlock = GameObject.FindGameObjectsWithTag("block"); ;
         allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
         IsGrounded = false;
+        velocityText = GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>();
+
     }
 
     // Update is called once per frame
@@ -30,7 +34,7 @@ public class player : MonoBehaviour
     {
         jumpThroughHead();
         animatorState();
-        velocityText();
+        velocityTextUdate();
         targetSerach();
 
     }
@@ -63,15 +67,15 @@ public class player : MonoBehaviour
         }
 
     }
-    void velocityText()
+    void velocityTextUdate()
     {
-        GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>().text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
+        velocityText.text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
 
     }
     public void jump()
     {
         if (IsGrounded)
-            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 160);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.up * 270);
     }
 
     public void fall()
@@ -92,7 +96,7 @@ public class player : MonoBehaviour
             nTargetObj.transform.tag = "blockTake";
             nTargetObj.transform.localScale = lastTargetObjScale;
             nTargetObj.AddComponent<Rigidbody>();
-            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
             nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
             nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
 
@@ -144,11 +148,12 @@ public class player : MonoBehaviour
                 nTargetObj = Instantiate(targetObj);
                 nTargetObj.transform.tag = "Untagged";
                 Destroy(nTargetObj.GetComponent<Rigidbody>());
+                Destroy(nTargetObj.GetComponent<ball>());
                 nTargetObj.transform.parent = transform;
                 if (targetObj.name == "Sphere")
                 {
                     nTargetObj.name = "Sphere";
-                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.35f;
+                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.32f;
                 }
                 else
                 {
@@ -169,13 +174,13 @@ public class player : MonoBehaviour
 
         if (this.GetComponent<player>().IsGrounded)
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 5);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 8);
             this.GetComponent<Animator>().SetInteger("state", 1);
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
         else
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 3F);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 6F);
         }
         if (this.GetComponent<Rigidbody>().velocity.x > 0)
         {
@@ -191,13 +196,13 @@ public class player : MonoBehaviour
 
         if (IsGrounded)
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 5);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 8);
             this.GetComponent<Animator>().SetInteger("state", 1);
             this.GetComponent<SpriteRenderer>().flipX = false;
         }
         else
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 3f);
+            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 4f);
         }
         if (this.GetComponent<Rigidbody>().velocity.x < 0)
         {
@@ -298,7 +303,7 @@ public class player : MonoBehaviour
         {
             Destroy(collision.gameObject);
             score++;
-            GameObject.Find("Score").GetComponent<UnityEngine.UI.Text>().text = score.ToString("F0");
+            ScoreText.text = score.ToString("F0");
         }
 
         //碰到block時

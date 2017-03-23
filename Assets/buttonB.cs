@@ -7,11 +7,13 @@ public class buttonB : MonoBehaviour
 {
     public bool touch;
     bool pressB;
+    player player;
 
     // Use this for initialization
     GameObject hitUIObject;
     void Start()
     {
+        player = GameObject.Find("player").GetComponent<player>();
         pressB = false;
         touch = false;
     }
@@ -30,7 +32,7 @@ public class buttonB : MonoBehaviour
                     if (hitUIObject.name == this.name && !pressB)
                     {
                         touch = true;
-                        GameObject.Find("player").GetComponent<player>().take();
+                        player.take();
                         pressB = true;
                     }
                 }
