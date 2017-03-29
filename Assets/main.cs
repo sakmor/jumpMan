@@ -58,16 +58,12 @@ public class main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        countDown();
-
-        playerControl();
-        joyStickControl();
+        countDown();        //設定倒數計時
+        playerControl();    //角色操作控制器
+        joyStickControl();  //角色操作控制器-虛擬搖桿
+        cameraFellow();     //使攝影機更隨角色
     }
 
-    void LateUpdate()
-    {
-        cameraFellow();
-    }
     void countDown()
     {
         float gameOverTime = gameTime - (Time.time - gameStartTime);
@@ -87,11 +83,11 @@ public class main : MonoBehaviour
             Vector2 joyStickVec = joyStick.GetComponent<joyStick>().joyStickVec;
             if (joyStickVec.x < 0)
             {
-                player.GetComponent<player>().left(joyStickVec.x);
+                player.GetComponent<player>().move("left", joyStickVec.x);
             }
             else
             {
-                player.GetComponent<player>().right(joyStickVec.x);
+                player.GetComponent<player>().move("right", joyStickVec.x);
             }
         }
     }
@@ -115,25 +111,18 @@ public class main : MonoBehaviour
 
     void playerControl()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            player.GetComponent<player>().pressA();
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            player.GetComponent<player>().releaseA();
-        }
+
         if (Input.GetKey("a"))
         {
-            player.GetComponent<player>().left(1);
+            player.GetComponent<player>().move("left", 1);
         }
         if (Input.GetKey("d"))
         {
-            player.GetComponent<player>().right(1);
+            player.GetComponent<player>().move("right", 1); ;
         }
         if (Input.GetKeyDown("b"))
         {
-            player.GetComponent<player>().take();
+            player.GetComponent<player>().pressB();
         }
 
 

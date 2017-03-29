@@ -23,7 +23,6 @@ public class buttonB : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 hitUIObject = EventSystem.current.currentSelectedGameObject;
@@ -32,7 +31,7 @@ public class buttonB : MonoBehaviour
                     if (hitUIObject.name == this.name && !pressB)
                     {
                         touch = true;
-                        player.take();
+                        player.pressB();
                         pressB = true;
                     }
                 }

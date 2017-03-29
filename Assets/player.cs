@@ -7,24 +7,20 @@ public class player : MonoBehaviour
 {
     public bool IsGrounded;
     public int score;
-    public float speedUP;
     public bool isTake;
-    GameObject[] allBlock;
     GameObject[] allTakeable;
-    GameObject targetObj;
-    GameObject nTargetObj;
-    Transform lastTargetObj;
-    Vector3 lastTargetObjScale;
+    GameObject closetBall;
+    GameObject newBall;
+    Transform lastclosetBall;
+    Vector3 lastclosetBallScale;
 
     UnityEngine.UI.Text velocityText, ScoreText;
     // Use this for initialization
     void Start()
     {
-        isTake = false;
-        speedUP = 1;
-        allBlock = GameObject.FindGameObjectsWithTag("block"); ;
-        allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
-        IsGrounded = false;
+        setIsTake(false);       //預設未持球
+        setIsGround(true);      //預設Player在地面
+        refresh_allTakeable();  //初始時更新可撿拾物清單
         velocityText = GameObject.Find("velocityText").GetComponent<UnityEngine.UI.Text>();
 
     }
@@ -32,39 +28,65 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        jumpThroughHead();
-        animatorState();
-        velocityTextUdate();
-        targetSerach();
-
+        animatorState();        //依據player的各種狀態，判斷現在對應的動畫狀態
+        velocityTextUdate();    //更新velocity資訊
+        targetBallSerach();     //尋找可以撿起的球
+    }
+    void takeBall()
+    {
+        if (isclosetBallClosetEnough()) //如果球在可撿範圍內
+        {
+            copyNewBall();              //將一顆新球
+            putBallOnHead();            //把新球放在頭上
+            DestoryOldBall();           //摧毀地上的舊球
+            setIsTake(true);            //設定目前是持球狀態
+        }
+    }
+    void throwBall()
+    {
+        give_newBall_Parameter();       //給予丟出去的球各項狀態
+        addForceTo_newBall();           //給予丟出去的球力量值
+        refresh_allTakeable();          //更新可撿的球的清單
+        setIsTake(false);               //設定目前是空手狀態
+    }
+    public void move(string direct, float n)
+    {
+        clampsMoveVelocity(n);          //限制Player移動速度
+        flipSpriteByDirect(direct);     //依據輸入的方向，決定是否要翻轉spriteX軸
+        addForceToPlayer(direct);       //給予player移動量
+        dectedBreakAnimator(direct);    //依據輸入方向，決定是否撥放煞車動作
     }
 
-    void targetSerach()
+    void targetBallSerach()
     {
         if (isTake == false)
         {
-
-            float dist = Mathf.Infinity;
-            foreach (var t in allTakeable)
+            getClosetBall();
+            keepClosetBallParameter();
+        }
+    }
+    void keepClosetBallParameter()
+    {
+        lastclosetBall = closetBall.transform.parent;
+        lastclosetBallScale = closetBall.transform.localScale;
+    }
+    void getClosetBall()
+    {
+        float dist = Mathf.Infinity;
+        GameObject closetObj = allTakeable[0];
+        foreach (var t in allTakeable)
+        {
+            if (t.GetComponent<Renderer>().isVisible)
             {
-                if (t.GetComponent<Renderer>().isVisible)
+                float temp = Vector3.Distance(t.transform.position, transform.position);
+                if (temp < dist)
                 {
-                    float temp = Vector3.Distance(t.transform.position, transform.position);
-                    if (temp < dist)
-                    {
-                        dist = temp;
-                        targetObj = t;
-                    }
+                    dist = temp;
+                    closetObj = t;
                 }
             }
-            if (targetObj)
-            {
-                lastTargetObj = targetObj.transform.parent;
-                lastTargetObjScale = targetObj.transform.localScale;
-
-            }
-
         }
+        closetBall = closetObj;
 
     }
     void velocityTextUdate()
@@ -85,159 +107,166 @@ public class player : MonoBehaviour
             this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
-    public void take()
+    public void pressB()
     {
         if (isTake)
         {
-            //throw
-            this.GetComponent<Animator>().Play("idel", -1, 0f);
-            isTake = false;
-            nTargetObj.transform.parent = lastTargetObj;
-            nTargetObj.transform.tag = "blockTake";
-            nTargetObj.transform.localScale = lastTargetObjScale;
-            nTargetObj.AddComponent<Rigidbody>();
-            nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
-
-            //假設我要3秒內到達
-            float dx = Mathf.Abs(GameObject.Find("Basket").transform.position.x - nTargetObj.transform.position.x);
-            float dy = Mathf.Abs(GameObject.Find("Basket").transform.position.y - nTargetObj.transform.position.y);
-            float vx = dx / 2f;
-            float vy = ((2 * vx * vx * dy) + (9.8f * dx * dx)) / (2 * vx * dx);
-            nTargetObj.GetComponent<Rigidbody>().velocity = new Vector3(vx, vy, 0);
-
-
-            // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
-
-            if (nTargetObj.GetComponent<m101>())
-            {
-                nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-                nTargetObj.GetComponent<m101>().enabled = true;
-                nTargetObj.GetComponent<Animator>().enabled = true;
-            }
-
-            if (this.GetComponent<SpriteRenderer>().flipX)
-            {
-                // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
-            }
-            else
-            {
-                // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
-            }
-            //加入空心球機制
-            nTargetObj.AddComponent<ball>();
-
-            //更新清單
-            allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
-
+            throwBall();
         }
         else
         {
-            //take
-            if (targetObj
-            && Vector3.Distance(transform.position, targetObj.transform.position) < 1.5f)
-            {
-
-                // Reset 
-                targetObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                targetObj.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                targetObj.GetComponent<Rigidbody>().isKinematic = true;
-                targetObj.transform.rotation = Quaternion.identity;
-                targetObj.GetComponent<Rigidbody>().isKinematic = false;
-
-                //disable m101
-                if (targetObj.GetComponent<m101>())
-                {
-                    targetObj.GetComponent<m101>().enabled = false;
-                    targetObj.GetComponent<Animator>().enabled = false;
-                }
-
-
-                // Copy
-                nTargetObj = Instantiate(targetObj);
-                nTargetObj.transform.tag = "Untagged";
-                Destroy(nTargetObj.GetComponent<Rigidbody>());
-                Destroy(nTargetObj.GetComponent<ball>());
-                nTargetObj.transform.parent = transform;
-                if (targetObj.name == "Sphere")
-                {
-                    nTargetObj.name = "Sphere";
-                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.32f;
-                }
-                else
-                {
-                    nTargetObj.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
-                }
-                Destroy(targetObj);
-
-                // this.GetComponent<Animator>().Play("take", -1, 0f);
-                isTake = true;
-            }
+            takeBall();
         }
     }
-    public void left(float n)
+
+    void setIsTake(bool n)
+    {
+        isTake = n;
+    }
+    void setIsGround(bool n)
+    {
+        IsGrounded = n;
+    }
+    void give_newBall_Parameter()
+    {
+        newBall.transform.parent = lastclosetBall;
+        newBall.transform.tag = "blockTake";
+        newBall.transform.localScale = lastclosetBallScale;
+        newBall.AddComponent<Rigidbody>();
+        newBall.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
+        newBall.AddComponent<ball>();
+        decte_newBall_TypeByName();
+    }
+    void decte_newBall_TypeByName()
+    {
+        if (newBall.GetComponent<m101>())
+        {
+            newBall.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            newBall.GetComponent<m101>().enabled = true;
+            newBall.GetComponent<Animator>().enabled = true;
+        }
+    }
+    void addForceTo_newBall()
+    {
+        newBall.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
+        newBall.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
+        if (this.GetComponent<SpriteRenderer>().flipX)
+        {
+            newBall.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
+        }
+        else
+        {
+            newBall.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
+        }
+    }
+
+    void addForceTo_newBall_NoMiss()
+    {
+        float dx = Mathf.Abs(GameObject.Find("Basket").transform.position.x - newBall.transform.position.x);
+        float dy = Mathf.Abs(GameObject.Find("Basket").transform.position.y - newBall.transform.position.y);
+        float vx = dx / 2f;
+        float vy = ((2 * vx * vx * dy) + (9.8f * dx * dx)) / (2 * vx * dx);
+        newBall.GetComponent<Rigidbody>().velocity = new Vector3(vx, vy, 0);
+    }
+    void refresh_allTakeable()
+    {
+        allTakeable = GameObject.FindGameObjectsWithTag("blockTake");
+    }
+
+    bool isclosetBallClosetEnough()
+    {
+        return (Vector3.Distance(transform.position, closetBall.transform.position) < 1.5f);
+
+    }
+    void copyNewBall()
+    {
+        newBall = Instantiate(closetBall);
+        newBall.transform.tag = "Untagged";
+        Destroy(newBall.GetComponent<Rigidbody>());
+        Destroy(newBall.GetComponent<ball>());
+        newBall.transform.parent = transform;
+    }
+    void DestoryOldBall()
+    {
+        Destroy(closetBall);
+    }
+    void putBallOnHead()
+    {
+        if (closetBall.name == "Sphere")
+        {
+            newBall.name = closetBall.name;
+            newBall.transform.localPosition = Vector3.zero + Vector3.up * 0.32f;
+        }
+        else
+        {
+            newBall.transform.localPosition = Vector3.zero + Vector3.up * 0.25f;
+        }
+
+    }
+
+    void clampsMoveVelocity(float n)
     {
         n = Mathf.Abs(n);
         Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
         this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
-
-        if (this.GetComponent<player>().IsGrounded)
+    }
+    void flipSpriteByDirect(string d)
+    {
+        if (d == "left")
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 8);
-            this.GetComponent<Animator>().SetInteger("state", 1);
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
         else
+        if (d == "right")
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.left * 6F);
-        }
-        if (this.GetComponent<Rigidbody>().velocity.x > 0)
-        {
-            this.GetComponent<Animator>().SetInteger("state", 4);
-        }
-
-    }
-    public void right(float n)
-    {
-        n = Mathf.Abs(n);
-        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
-
-        if (IsGrounded)
-        {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 8);
-            this.GetComponent<Animator>().SetInteger("state", 1);
             this.GetComponent<SpriteRenderer>().flipX = false;
+        }
+    }
+    Vector3 getFocreByDirect(string d)
+    {
+        if (d == "left")
+        {
+            return Vector3.left;
+        }
+        else
+        if (d == "right")
+        {
+            return Vector3.right;
         }
         else
         {
-            this.GetComponent<Rigidbody>().AddForce(Vector3.right * 4f);
+            return Vector3.zero;
         }
-        if (this.GetComponent<Rigidbody>().velocity.x < 0)
+    }
+    void addForceToPlayer(string direct)
+    {
+        Vector3 vectorDirect = getFocreByDirect(direct);
+        if (IsGrounded)
+        {
+            this.GetComponent<Animator>().SetInteger("state", 1);
+            this.GetComponent<Rigidbody>().AddForce(vectorDirect * 8);
+        }
+        else
+        {
+            this.GetComponent<Rigidbody>().AddForce(vectorDirect * 4);
+        }
+    }
+
+    void dectedBreakAnimator(string direct)
+    {
+
+        if (direct == "left" && GetComponent<Rigidbody>().velocity.x > 0)
+        {
+            this.GetComponent<Animator>().SetInteger("state", 4);
+
+        }
+        if (direct == "right" && GetComponent<Rigidbody>().velocity.x < 0)
         {
             this.GetComponent<Animator>().SetInteger("state", 4);
         }
     }
-    public void pressA()
-    {
-        if (IsGrounded)
-        {
-            speedUP = 2f;
-        }
 
-    }
-    public void releaseA()
-    {
-        if (IsGrounded)
-        {
-            speedUP = 1f;
-        }
 
-    }
-    public void brakes()
-    {
-        // Debug.Log("brakes");
-        // this.GetComponent<Rigidbody>().velocity *= 0.5f;
-    }
 
     //animatorState: 依據player的各種狀態，判斷現在對應的動畫狀態
     void animatorState()
@@ -275,79 +304,34 @@ public class player : MonoBehaviour
         }
     }
 
-    //讓player可以從下往上穿過block的判斷式
-    void jumpThroughHead()
-    {
-        if (!IsGrounded)
-        {
-            if (GetComponent<Rigidbody>().velocity.y > 0)
-            {
-                foreach (var i in allBlock)
-                {
-                    if (i.transform.position.y > transform.position.y)
-                    {
-                        Physics.IgnoreCollision(i.GetComponent<Collider>(), GetComponent<Collider>());
-                    }
-                }
-            }
-            else
-            {
-                foreach (var i in allBlock)
-                {
-                    if (i.transform.position.y < transform.position.y)
-                    {
-                        Physics.IgnoreCollision(i.GetComponent<Collider>(), GetComponent<Collider>(), false);
-                    }
-                }
-            }
-        }
-    }
-
-    //OnCollisionEnter:當player碰到其他collision時(一次性)...
     void OnCollisionEnter(Collision collision)
     {
-        //碰到star時
-        if (collision.gameObject.tag == "star")
-        {
-            Destroy(collision.gameObject);
-            score++;
-            ScoreText.text = score.ToString("F0");
-        }
 
-        //碰到block時
-        if (collision.gameObject.tag == "block")
+        if (collision.gameObject.tag == "block"
+        || collision.gameObject.tag == "blockTake")
         {
-            IsGrounded = true;
+            setIsGround(true);
         }
     }
 
-    //OnCollisionEnter:當player持續碰到其他collision時(重複性)...
+
     void OnCollisionStay(Collision collision)
     {
-        //碰到block時
-        if (collision.gameObject.tag == "block")
-        {
-            IsGrounded = true;
-        }
 
-        //碰到blockTake時
-        if (collision.gameObject.tag == "blockTake")
+        if (collision.gameObject.tag == "block"
+        || collision.gameObject.tag == "blockTake")
         {
-            IsGrounded = true;
+            setIsGround(true);
         }
     }
 
-    //OnCollisionEnter:當player離開碰到的collision時(一次性)...
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject == targetObj)
+
+        if (collision.gameObject.tag == "block"
+        || collision.gameObject.tag == "blockTake")
         {
-            targetObj = null;
-        }
-        //當離開block時
-        if (collision.gameObject.tag == "block")
-        {
-            IsGrounded = false;
+            setIsGround(false);
         }
     }
 }
