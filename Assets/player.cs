@@ -97,8 +97,16 @@ public class player : MonoBehaviour
             nTargetObj.transform.localScale = lastTargetObjScale;
             nTargetObj.AddComponent<Rigidbody>();
             nTargetObj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
-            nTargetObj.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
-            nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
+
+            //假設我要3秒內到達
+            float dx = Mathf.Abs(GameObject.Find("Basket").transform.position.x - nTargetObj.transform.position.x);
+            float dy = Mathf.Abs(GameObject.Find("Basket").transform.position.y - nTargetObj.transform.position.y);
+            float vx = dx / 2f;
+            float vy = ((2 * vx * vx * dy) + (9.8f * dx * dx)) / (2 * vx * dx);
+            nTargetObj.GetComponent<Rigidbody>().velocity = new Vector3(vx, vy, 0);
+
+
+            // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
 
             if (nTargetObj.GetComponent<m101>())
             {
@@ -109,11 +117,11 @@ public class player : MonoBehaviour
 
             if (this.GetComponent<SpriteRenderer>().flipX)
             {
-                nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
+                // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 100);
             }
             else
             {
-                nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
+                // nTargetObj.GetComponent<Rigidbody>().AddForce(Vector3.right * 100);
             }
             //加入空心球機制
             nTargetObj.AddComponent<ball>();
