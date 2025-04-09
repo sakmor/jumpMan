@@ -38,8 +38,9 @@ public class main : MonoBehaviour
         cameraRELtarget = Camera.transform.position - player.transform.position;
         cameraBaseDist = Vector3.Distance(player.transform.position, Basket.transform.position);
         basefov = Camera.GetComponent<Camera>().fieldOfView;
+		ScoreText.text = "Score:" + score.ToString();
 
-    }
+	}
     public void dymCamer()
     {
         isDymCamer = !isDymCamer;
@@ -52,7 +53,7 @@ public class main : MonoBehaviour
             best = score;
             bestRecord.text = "Best record: " + (best).ToString("F1");
         }
-        ScoreText.text = score.ToString();
+        ScoreText.text = "Score:"+score.ToString();
     }
 
     // Update is called once per frame
@@ -71,8 +72,8 @@ public class main : MonoBehaviour
         if (gameOverTime <= 0)
         {
             score = 0;
-            ScoreText.text = score.ToString();
-            gameStartTime = Time.time;
+			ScoreText.text = "Score:" + score.ToString();
+			gameStartTime = Time.time;
         }
 
     }

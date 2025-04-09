@@ -23,7 +23,7 @@ public class throwIn : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<Rigidbody>().velocity.y < 0)
+        if (other.gameObject.GetComponent<Rigidbody>().linearVelocity.y < 0)
         {
             main.throwIn();
             if (other.GetComponent<ball>().isNiceshoot)

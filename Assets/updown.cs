@@ -22,19 +22,19 @@ public class updown : MonoBehaviour
     {
         if (!onThis && this.transform.position.y > startPos.y)
         {
-            this.GetComponent<Rigidbody>().velocity = Vector3.down * 2.0f;
+            this.GetComponent<Rigidbody>().linearVelocity = Vector3.down * 2.0f;
             // transform.position -= Vector3.up * 0.03f;
         }
         if (!onThis && this.transform.position.y < startPos.y)
         {
-            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            this.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         }
 
     }
     void OnCollisionStay(Collision other)
     {
         onThis = true;
-        this.GetComponent<Rigidbody>().velocity = Vector3.up * 2.0f;
+        this.GetComponent<Rigidbody>().linearVelocity = Vector3.up * 2.0f;
     }
     void OnCollisionExit(Collision other)
     {

@@ -62,7 +62,7 @@ public class m101 : MonoBehaviour
             {
                 dir = (goPos - transform.position).normalized * speed;
             }
-            GetComponent<Rigidbody>().velocity = new Vector3(dir.x, 0, 0);
+            GetComponent<Rigidbody>().linearVelocity = new Vector3(dir.x, 0, 0);
         }
     }
 
@@ -77,7 +77,7 @@ public class m101 : MonoBehaviour
         {
             if (collision.transform.position.y > this.transform.position.y)
             {
-                var temp = collision.gameObject.GetComponent<Rigidbody>().velocity.y;
+                var temp = collision.gameObject.GetComponent<Rigidbody>().linearVelocity.y;
                 if (temp <= 1)
                 {
                     temp = 0;

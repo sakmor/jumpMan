@@ -91,7 +91,7 @@ public class player : MonoBehaviour
     }
     void velocityTextUdate()
     {
-        velocityText.text = this.GetComponent<Rigidbody>().velocity.ToString("F1");
+        velocityText.text = this.GetComponent<Rigidbody>().linearVelocity.ToString("F1");
 
     }
     public void jump()
@@ -102,9 +102,9 @@ public class player : MonoBehaviour
 
     public void fall()
     {
-        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
+        Vector3 temp3 = this.GetComponent<Rigidbody>().linearVelocity;
         if (temp3.y > 0)
-            this.GetComponent<Rigidbody>().velocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
+            this.GetComponent<Rigidbody>().linearVelocity = new Vector3(temp3.x, temp3.y * 0.5f, temp3.z);
 
     }
     public void pressB()
@@ -148,7 +148,7 @@ public class player : MonoBehaviour
     }
     void addForceTo_newBall()
     {
-        newBall.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
+        newBall.GetComponent<Rigidbody>().linearVelocity = GetComponent<Rigidbody>().linearVelocity;
         newBall.GetComponent<Rigidbody>().AddForce(Vector3.up * 200);
         if (this.GetComponent<SpriteRenderer>().flipX)
         {
@@ -166,7 +166,7 @@ public class player : MonoBehaviour
         float dy = Mathf.Abs(GameObject.Find("Basket").transform.position.y - newBall.transform.position.y);
         float vx = dx / 2f;
         float vy = ((2 * vx * vx * dy) + (9.8f * dx * dx)) / (2 * vx * dx);
-        newBall.GetComponent<Rigidbody>().velocity = new Vector3(vx, vy, 0);
+        newBall.GetComponent<Rigidbody>().linearVelocity = new Vector3(vx, vy, 0);
     }
     void refresh_allTakeable()
     {
@@ -207,8 +207,8 @@ public class player : MonoBehaviour
     void clampsMoveVelocity(float n)
     {
         n = Mathf.Abs(n);
-        Vector3 temp3 = this.GetComponent<Rigidbody>().velocity;
-        this.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
+        Vector3 temp3 = this.GetComponent<Rigidbody>().linearVelocity;
+        this.GetComponent<Rigidbody>().linearVelocity = new Vector3(Mathf.Clamp(temp3.x, -4, 4) * n, temp3.y, temp3.z);
     }
     void flipSpriteByDirect(string d)
     {
@@ -255,12 +255,12 @@ public class player : MonoBehaviour
     void dectedBreakAnimator(string direct)
     {
 
-        if (direct == "left" && GetComponent<Rigidbody>().velocity.x > 0)
+        if (direct == "left" && GetComponent<Rigidbody>().linearVelocity.x > 0)
         {
             this.GetComponent<Animator>().SetInteger("state", 4);
 
         }
-        if (direct == "right" && GetComponent<Rigidbody>().velocity.x < 0)
+        if (direct == "right" && GetComponent<Rigidbody>().linearVelocity.x < 0)
         {
             this.GetComponent<Animator>().SetInteger("state", 4);
         }
@@ -274,7 +274,7 @@ public class player : MonoBehaviour
         if (!IsGrounded)
         {
             //如果在空中，且正在往上升:2-jump
-            if (GetComponent<Rigidbody>().velocity.y > 0)
+            if (GetComponent<Rigidbody>().linearVelocity.y > 0)
             {
                 GetComponent<Animator>().SetInteger("state", 2);
             }
@@ -287,8 +287,8 @@ public class player : MonoBehaviour
 
         if (IsGrounded)
         {
-            if (GetComponent<Rigidbody>().velocity.x > -0.5f
-            && GetComponent<Rigidbody>().velocity.x < 0.5f
+            if (GetComponent<Rigidbody>().linearVelocity.x > -0.5f
+            && GetComponent<Rigidbody>().linearVelocity.x < 0.5f
             && GetComponent<Animator>().GetInteger("state") != 5)
             {
                 //如果在地面:0-idel
@@ -297,7 +297,7 @@ public class player : MonoBehaviour
             else
             {
                 // GetComponent<Animator>().SetInteger("state", 1);
-                GetComponent<Animator>().speed = 0.5f + Mathf.Abs(GetComponent<Rigidbody>().velocity.x) / 5;
+                GetComponent<Animator>().speed = 0.5f + Mathf.Abs(GetComponent<Rigidbody>().linearVelocity.x) / 5;
             }
 
 
